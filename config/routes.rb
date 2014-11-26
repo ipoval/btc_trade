@@ -6,6 +6,8 @@ Rails.application.routes.draw do
   root 'application#index'
 
   get '/account' => 'account#index'
+  get '/account/edit' => 'account#edit', as: 'edit_account'
+  put '/account/update' => 'account#update', as: 'update_account'
   resources :orders, only: [:index, :new, :destroy]
   resources :buy_orders, only: [:create]
   resources :sell_orders, only: [:create]

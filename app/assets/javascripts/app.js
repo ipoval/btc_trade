@@ -21,11 +21,15 @@ window.BTCHelper = {
     localStorage.removeItem('autoOrderP');
     localStorage.removeItem('autoOrderV');
     localStorage.setItem('autoOrderBalance', 0);
+    window.orderTransactionLock = false;
+    $('#ordersList tbody tr.auto-order.buy').remove();
   },
   clearSellAutoOrders: function() {
     localStorage.removeItem('autoSellOrderP');
     localStorage.removeItem('autoSellOrderV');
     localStorage.setItem('autoSellOrderBalance', 0);
+    window.orderSellTransactionLock = false;
+    $('#ordersList tbody tr.auto-order.sell').remove();
   }
 };
 
@@ -71,11 +75,13 @@ jQuery(function($) {
     });
     renderAlert('Selling: ' + price + ' &times; ' + amount, 'alert-info');
   }).on('mouseenter', '#orderbook td.actions', function(event) {
+
     var cell = $(this), price = cell.data('price'), amount = $('#orderAmount').val(), span = $('<span class="label label-danger"></span>');
-    span.data('price', price);
-    span.html(price + ' / ' + amount).css({ left: '-100px', position: 'absolute', top: '8px' });
-    cell.css({ position: 'relative' }).prepend(span);
+    span.data('price', price).html(price + ' / ' + amount);
+    cell.prepend(span);
+
   }).on('mouseleave', '#orderbook td.actions', function(event) {
+
     $(this).find('span').remove();
 
   }).on('click', '#btnCreateOrder', function(event) {
@@ -88,19 +94,30 @@ jQuery(function($) {
 
     if ( auto_order_type == 'auto_buy' ) {
       window.BTCHelper.createOrder(p, v);
-      autoOrders();
+      autoBuyOrders();
+      renderBuyAutoOrders();
+      window.BTCHelper.autoBuyOrderTimeout = setTimeout(window.BTCHelper.clearBuyAutoOrders, 60000);
     } else {
       window.BTCHelper.createAutoOrderSell(p, v);
-      autoOrdersSell();
+      autoSellOrders();
+      renderSellAutoOrders();
+      window.BTCHelper.autoSellOrderTimeout =  setTimeout(window.BTCHelper.clearSellAutoOrders, 60000);
     }
 
     return false;
+
   }).on('click', '#btnDeleteOrders', function(event) {
 
     event.preventDefault();
     window.BTCHelper.clearAutoOrders();
     renderAlert('auto-orders deleted');
+    $('#ordersList tbody tr.auto-order').remove();
+
+    if (window.BTCHelper.autoBuyOrderTimeout) { clearTimeout(window.BTCHelper.autoBuyOrderTimeout); }
+    if (window.BTCHelper.autoSellOrderTimeout) { clearTimeout(window.BTCHelper.autoSellOrderTimeout); }
+
     return false;
+
   });
 
   function sellBuyButtons() {
@@ -112,7 +129,6 @@ jQuery(function($) {
     ].join('');
     return btns;
   }
-
   function renderAsks(asks) {
     var partial = '';
     asks.reverse().forEach(function(ask) {
@@ -132,12 +148,33 @@ jQuery(function($) {
 
   function redrawCurrentPrice(askPrice, askVolume, bidPrice, bidVolume) {
     $('#orderbook-current-price').html(askPrice + ' USD');
-    $('#orderbook-current-price').data('price', askPrice).data('ask-volume', askVolume).data('bid-price', bidPrice).data('bid-volume', bidVolume);
+    $('#orderbook-current-price').data({ price: askPrice, 'ask-volume': askVolume, 'bid-price': bidPrice, 'bid-volume': bidVolume });
     document.title = askPrice;
   }
   function redrawBalance() { $('#sectionAccountBalance').load('/account'); }
   function redrawOrdersList() { $('#sectionOrdersList').load('/orders'); }
-  /* FIX THIS TO RM */
+  function renderBuyAutoOrders() {
+    if ( ! window.BTCHelper.autoOrdersOn() ) { return; }
+    var orderRow = [
+      '<tr class="success auto-order buy">',
+        '<td></td>', '<td><span class="label label-primary">auto</span></td>', '<td>' + window.BTCHelper.autoOrderP() + '</td>', '<td>' + window.BTCHelper.autoOrderV() + '</td>', '<td>USD</td>', '<td></td>',
+      '</tr>'
+    ].join('');
+    $('#ordersList tbody').prepend(orderRow);
+  }
+  function renderSellAutoOrders() {
+    if ( ! window.BTCHelper.autoSellOrdersOn() ) { return; }
+    var orderRow = [
+      '<tr class="danger auto-order sell">',
+        '<td></td>', '<td><span class="label label-primary">auto</span></td>', '<td>' + window.BTCHelper.autoSellOrderP() + '</td>', '<td>' + window.BTCHelper.autoSellOrderV() + '</td>', '<td>USD</td>', '<td></td>',
+      '</tr>'
+    ].join('');
+    $('#ordersList tbody').prepend(orderRow);
+  }
+
+  window.renderBuyAutoOrders = renderBuyAutoOrders;
+  window.renderSellAutoOrders = renderSellAutoOrders;
+
   function renderAlert(msg, _type) {
     var type = _type || 'alert-success';
     var alert = [
@@ -146,7 +183,7 @@ jQuery(function($) {
         msg,
       '</div>'
     ].join('');
-    $(alert).appendTo('body').fadeOut(2500);
+    $(alert).appendTo('body').fadeOut(2500, function() { $('#tradeAlert').remove(); });
   }
 
   function autoBuy(price, volume, stopBuyV) {
@@ -213,7 +250,7 @@ jQuery(function($) {
     });
   }
 
-  function autoOrders() {
+  function autoBuyOrders() {
     if ( ! window.BTCHelper.autoOrdersOn() ) { return; }
     if ( window.orderTransactionLock ) { return console.info('auto-order exclusive lock'); }
 
@@ -227,12 +264,12 @@ jQuery(function($) {
     renderAlert('auto-order long queued: ' + stopBuyP + ' / ' + stopBuyV);
   }
 
-  function autoOrdersSell() {
+  function autoSellOrders() {
     if ( ! window.BTCHelper.autoSellOrdersOn() ) { return; }
     if ( window.orderSellTransactionLock ) { return console.info('auto-order sell exclusive lock'); }
 
     var curBidP = parseFloat($('#orderbook-current-price').data('bid-price')),
-      curBidV = parseFloat($('#orderbook-current-price').data('bid-volume'));
+      curBidV = parseFloat($('#orderbook-current-price').data('bid-volume')),
       stopSellP = window.BTCHelper.autoSellOrderP(),
       stopSellV = window.BTCHelper.autoSellOrderV();
 
@@ -249,8 +286,8 @@ jQuery(function($) {
 
     channel.bind('update', function(payload) {
       var topAsks = payload.asks.slice(0, 5), topBids = payload.bids.slice(0, 5), buyP = topAsks[0][0], buyV = topAsks[0][1], sellP = topBids[0][0], sellV = topBids[0][1];
-      autoOrders();
-      autoOrdersSell();
+      autoBuyOrders();
+      autoSellOrders();
       $('#orderbook tbody').html(renderAsks(topAsks) + renderBids(topBids));
       redrawCurrentPrice(buyP, buyV, sellP, sellV);
     });

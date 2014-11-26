@@ -1,9 +1,10 @@
+require 'net/http'
+
 class Lakebtc
-  # FIXME: move secrets into .env gem
-  ACCESSKEY = "camilo@instabuyback.com"
-  SECRETKEY = "afeb2cb34485ee9a9cdddda3c79ad4951e02860923b7217eda563d7ae4a74fc7"
-  URL = "https://www.lakebtc.com/api_v1"
-  TIMEOUT = 30
+  ACCESSKEY = ENV['BTC_LAKE_API_ACCESSKEY']
+  SECRETKEY = ENV['BTC_LAKE_API_SECRETKEY']
+  URL       = "https://www.lakebtc.com/api_v1"
+  TIMEOUT   = 30
 
   def get_balances
     conn('getAccountInfo')

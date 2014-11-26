@@ -1,4 +1,10 @@
 #!/usr/bin/env ruby
+
+# APPLICATION SPECIFIC ENV VARIABLES
+ENV['BTC_LAKE_API_ACCESSKEY']      ||= "camilo@instabuyback.com"
+ENV['BTC_LAKE_API_SECRETKEY']      ||= "afeb2cb34485ee9a9cdddda3c79ad4951e02860923b7217eda563d7ae4a74fc7"
+ENV['GOOGLE_AUTHENTICATOR_SECRET'] ||= "abcd" * 4
+
 begin
   load File.expand_path("../spring", __FILE__)
 rescue LoadError

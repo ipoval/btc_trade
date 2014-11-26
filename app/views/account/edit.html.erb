@@ -1,0 +1,40 @@
+<div class="col-lg-4">
+
+<div class="table-responsive">
+  <table id="accountBalance" class="table table-condensed table-hover">
+    <thead>
+      <tr><th>Balance</th><th>USD</th><th>BTC</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><%= @account.profile['id'] %></td>
+        <td id="usdBalance"><%= number_to_currency @account.balance['USD'] %></td>
+        <td id="btkBalance"><%= @account.balance['BTC'] %></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<section id="sectionAccountEdit" class="row">
+  <%= form_tag update_account_path, method: 'put', class: "form", role: "form"  do %>
+    <div class="form-group">
+      <label for="inputEmail3" class="control-label">API ACCESS KEY</label>
+      <div class="">
+        <input type="text" class="form-control" id="inputEmail3" placeholder="access key" name="access_key" autofocus="autofocus">
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="inputPassword3" class="control-label">API SECRET KEY</label>
+      <div class="">
+        <input type="text" class="form-control" id="inputPassword3" placeholder="secret key" name="secret_key">
+      </div>
+    </div>
+    <div class="form-group">
+      <div class="">
+        <button type="submit" class="btn btn-primary">Update</button>
+      </div>
+    </div>
+  <% end %>
+</section>
+
+</div>

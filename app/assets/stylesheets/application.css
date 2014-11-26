@@ -13,3 +13,24 @@
  *= require_tree .
  *= require_self
  */
+
+html, body {
+  overflow-x: hidden;
+}
+body {
+  padding-top: 70px;
+}
+nav > .containter {
+  margin: 0 !important;
+}
+.col-lg-4 {
+  padding-left: 0px !important;
+}
+#orderbook td.actions {
+  position: relative;
+}
+#orderbook td.actions span {
+  left: -100px;
+  position: absolute;
+  top: 8px;
+}
