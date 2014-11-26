@@ -1,0 +1,5 @@
+if ( $('#sectionAutoOrders form').size() > 0 ) {
+  $('#sectionAutoOrders').empty();
+} else {
+  $('#sectionAutoOrders').html("<%=j render partial: 'new_order_form' %>");
+}

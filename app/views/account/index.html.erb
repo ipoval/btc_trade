@@ -1,0 +1,14 @@
+<div class="table-responsive">
+  <table id="accountBalance" class="table table-condensed table-hover">
+    <thead>
+      <tr><th>Balance</th><th>USD</th><th>BTC</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><%= @account.profile['id'] %></td>
+        <td id="usdBalance"><%= number_to_currency @account.balance['USD'] %></td>
+        <td id="btkBalance"><%= @account.balance['BTC'] %></td>
+      </tr>
+    </tbody>
+  </table>
+</div>

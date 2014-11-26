@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
+  <%= javascript_include_tag 'WebSocketLakeBTC' %>
+  <%= csrf_meta_tags %>
+  <style>
+    .col-lg-4 {
+      padding-left: 0px !important;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="row">
+      <%= yield %>
+    </div>
+  </div>
+</body>
+</html>
