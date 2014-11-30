@@ -1,9 +1,6 @@
 class SellOrdersController < ApplicationController
   def create
     result = client.sell_order(order_price, order_amount, 'USD')
-    puts "IP: +++++++++++++++++++++++++"
-    p result
-    puts "IP: +++++++++++++++++++++++++"
     render(json: result)
   end
 

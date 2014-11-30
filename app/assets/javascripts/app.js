@@ -34,6 +34,9 @@ window.BTCHelper = {
 };
 
 jQuery(function($) {
+  /* page: / */
+  if ( ! $('#application_index').size() ) { return; }
+
   function afterTransaction(data) {
     var alertType;
     if ( data.result.trades > 0 ) {

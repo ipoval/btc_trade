@@ -38,4 +38,4 @@ gem 'debugger', group: [:development, :test]
 
 gem 'oj'
 gem 'oj_mimic_json'
-gem "rotp"
+gem 'rotp'
