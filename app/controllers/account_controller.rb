@@ -1,3 +1,5 @@
+require 'yaml/store'
+
 class AccountController < ApplicationController
   def index
     @account = OpenStruct.new client.get_balances
@@ -9,32 +11,29 @@ class AccountController < ApplicationController
   end
 
   def update
-    prev_access_key = Lakebtc.const_get('ACCESSKEY')
-    prev_secret_key = Lakebtc.const_get('SECRETKEY')
-
     begin
-      Lakebtc.const_set('ACCESSKEY', access_key)
-      Lakebtc.const_set('SECRETKEY', secret_key)
-      ENV['BTC_LAKE_API_ACCESSKEY'] = access_key
-      ENV['BTC_LAKE_API_SECRETKEY'] = secret_key
-      Lakebtc.new.get_balances
+      Lakebtc.new(updating_access_key, updating_secret_key).get_balances
     rescue
-      Lakebtc.const_set('ACCESSKEY', prev_access_key)
-      Lakebtc.const_set('SECRETKEY', prev_secret_key)
-      ENV['BTC_LAKE_API_ACCESSKEY'] = prev_access_key
-      ENV['BTC_LAKE_API_SECRETKEY'] = prev_secret_key
+    else
+      write_updating_secrets
     end
-
     redirect_to edit_account_path
   end
 
   private
 
-  def access_key
+  def updating_access_key
     params[:access_key]
   end
 
-  def secret_key
+  def updating_secret_key
     params[:secret_key]
+  end
+
+  def write_updating_secrets
+    store.transaction do |db|
+      db[:LAKE_BTC_API_ACCESSKEY] = updating_access_key
+      db[:LAKE_BTC_API_SECRETKEY] = updating_secret_key
+    end
   end
 end

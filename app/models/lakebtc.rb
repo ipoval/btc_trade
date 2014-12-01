@@ -1,10 +1,12 @@
 require 'net/http'
 
 class Lakebtc
-  ACCESSKEY = ENV['BTC_LAKE_API_ACCESSKEY']
-  SECRETKEY = ENV['BTC_LAKE_API_SECRETKEY']
-  URL       = "https://www.lakebtc.com/api_v1"
-  TIMEOUT   = 30
+  URL     = "https://www.lakebtc.com/api_v1"
+  TIMEOUT = 30
+
+  def initialize(access_key, secret_key)
+    @access_key, @secret_key = access_key, secret_key
+  end
 
   def get_balances
     conn('getAccountInfo')
@@ -36,7 +38,7 @@ class Lakebtc
     postdata = { "method" => trade_method, "params" => myparams, "id" => 1 }
 
     ps = ["tonce=#{tonce}"]
-    ps << "accesskey=#{ACCESSKEY}"
+    ps << "accesskey=#@access_key"
     ps << "requestmethod=post"
     ps << "id=1"
     ps << "method=#{trade_method}"
@@ -45,9 +47,9 @@ class Lakebtc
     pstring = ps.join('&')
 
     digest = OpenSSL::Digest.new('sha1')
-    hash = OpenSSL::HMAC.hexdigest(digest, SECRETKEY, pstring)
+    hash = OpenSSL::HMAC.hexdigest(digest, @secret_key, pstring)
 
-    pair = "#{ACCESSKEY}:#{hash}"
+    pair = "#@access_key:#{hash}"
     b64 = "Basic " + Base64.strict_encode64(pair)
 
     http = Net::HTTP.new(uri.host, uri.port)
