@@ -297,6 +297,12 @@ jQuery(function($) {
 
     clb();
     redrawOrdersList();
+
+    var pusher = new Pusher('de504dc5763aeef9ff52'), order_book_channel = pusher.subscribe('order_book');
+    order_book_channel.bind('data', function(payload) {
+      var topAsks = payload.asks.slice(0, 5), topBids = payload.bids.slice(0, 5);
+      $('#orderbookBitstamp tbody').html(renderAsks(topAsks) + renderBids(topBids));
+    });
   }
 
   init(redrawBalance);
