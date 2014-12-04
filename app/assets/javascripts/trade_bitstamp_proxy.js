@@ -39,6 +39,7 @@ jQuery(function($) {
         },
 
         redrawBalance: function() { $('#section-bitstamp-account-balance').load('/bitstamp/account'); },
+        redrawOrders: function() { $('#section-bitstamp-orders').load('/bitstamp/orders'); },
 
         init: function() {
           var self = this,
@@ -50,6 +51,7 @@ jQuery(function($) {
           });
 
           this.redrawBalance();
+          this.redrawOrders();
         }
       };
     })();
@@ -67,6 +69,23 @@ jQuery(function($) {
     cell.prepend(span);
   }).on('mouseleave', '#orderbookBitstamp td.actions', function(event) {
     $(this).find('span').remove();
+  }).on('click', '#orderbookBitstamp td.actions button.btn-buy', function() {
+    var cell = $(this).parents('td'), price = cell.data('price'), amount = $('#orderAmount').val();
+
+    $.post('/bitstamp/buy_orders', { price: price, amount: amount }, function(data) {
+      console.dir(data);
+      if (data.error) { return; renderAlert(data.error.toString(), 'alert-danger'); }
+    });
+
+    //renderAlert('Buying: ' + price + ' &times; ' + amount, 'alert-info');
+  }).on('click', '#orderbookBitstamp td.actions button.btn-sell', function() {
+    var cell = $(this).parents('td'), price = cell.data('price'), amount = $('#orderAmount').val();
+
+    $.post('/bitstamp/sell_orders', { price: price, amount: amount }, function(data) {
+      console.dir(data);
+      if (data.error) { return; renderAlert(data.error.toString(), 'alert-danger'); }
+    });
+    //renderAlert('Selling: ' + price + ' &times; ' + amount, 'alert-info');
   });
 
 });

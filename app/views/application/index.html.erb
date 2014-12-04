@@ -36,8 +36,8 @@
   </div>
 </section>
 
-<section id="sectionOneClickAmount" class="row">
-  <div class="col-lg-4">
+<section class="row">
+  <div id="sectionOneClickAmount" class="col-lg-4">
     <div class="form-group">
       <div class="input-group input-group-sm">
         <span class="input-group-addon">Order Amount (BTC)</span>
@@ -56,6 +56,24 @@
       <%= link_to 'Auto order', new_order_path, remote: true %>
     </div>
   </div>
+
+  <div id="section-bitstamp-OneClickAmount" class="col-lg-4 col-lg-offset-3">
+    <div class="form-group">
+      <div class="input-group input-group-sm">
+        <span class="input-group-addon">Order Amount (BTC)</span>
+        <input id="orderAmount" name="orderAmount" type="text" class="form-control" placeholder="0.01" value="0.01" data-value="0.01">
+      </div>
+    </div>
+    <div id="multipliers" class="form-group">
+      <div aria-label="First group" role="group" class="btn-group btn-group-sm">
+        <button class="btn btn-default" type="button" data-ind="1">&times;1</button>
+        <button class="btn btn-default" type="button" data-ind="2">&times;2</button>
+        <button class="btn btn-default" type="button" data-ind="5">&times;5</button>
+        <button class="btn btn-default" type="button" data-ind="10">&times;10</button>
+        <button class="btn btn-default" type="button" data-ind="20">&times;20</button>
+      </div>
+    </div>
+  </div>
 </section>
 
 <section class="row" id="sectionAutoOrders">
@@ -68,4 +86,5 @@
 
 <section class="row">
   <div id="sectionOrdersList" class="col-lg-4"></div>
+  <div id="section-bitstamp-orders" class="col-lg-4 col-lg-offset-3"></div>
 </section>
