@@ -63,14 +63,23 @@ jQuery(function($) {
 
   this.TradeBitstampProxy.init();
 
-  $(document).on('mouseenter', '#orderbookBitstamp td.actions', function(event) {
-    var cell = $(this), price = cell.data('price'), amount = $('#orderAmount').val(), span = $('<span class="label label-danger"></span>');
+  $(document).on('click', '#section-bitstamp-OneClickAmount button', function(event) {
+
+    var focusedBtn = $('#section-bitstamp-OneClickAmount button.focus');
+    if ( focusedBtn.size() ) { focusedBtn.removeClass('focus'); }
+    /* update volume in form */
+    var btn = $(this), field = $('#bitstamp-order-amount'), updatedBidAmount = parseFloat(field.data('value')) * parseInt(btn.data('ind'));
+    field.val(updatedBidAmount.toFixed(4));
+    btn.addClass('focus');
+
+  }).on('mouseenter', '#orderbookBitstamp td.actions', function(event) {
+    var cell = $(this), price = cell.data('price'), amount = $('#bitstamp-order-amount').val(), span = $('<span class="label label-danger"></span>');
     span.data('price', price).html(price + ' / ' + amount);
     cell.prepend(span);
   }).on('mouseleave', '#orderbookBitstamp td.actions', function(event) {
     $(this).find('span').remove();
   }).on('click', '#orderbookBitstamp td.actions button.btn-buy', function() {
-    var cell = $(this).parents('td'), price = cell.data('price'), amount = $('#orderAmount').val();
+    var cell = $(this).parents('td'), price = cell.data('price'), amount = $('#bitstamp-order-amount').val();
 
     $.post('/bitstamp/buy_orders', { price: price, amount: amount }, function(data) {
       console.dir(data);

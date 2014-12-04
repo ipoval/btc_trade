@@ -34,3 +34,11 @@ nav > .containter {
   position: absolute;
   top: 8px;
 }
+#orderbookBitstamp td.actions {
+  position: relative;
+}
+#orderbookBitstamp td.actions span {
+  left: -100px;
+  position: absolute;
+  top: 8px;
+}
