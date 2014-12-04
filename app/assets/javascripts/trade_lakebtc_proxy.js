@@ -136,7 +136,7 @@ jQuery(function($) {
     var partial = '';
     asks.reverse().forEach(function(ask) {
       var price = ask[0], amount = ask[1], sum = (price * amount).toFixed(2);
-      partial += '<tr class="success"><td>A</td><td>' + price + '</td><td>' + amount + '</td><td>' + sum + '</td><td class="actions" data-price="' + price + '">' + sellBuyButtons() + '</td></tr>';
+      partial += '<tr class="success"><td>A</td><td>' + price + '</td><td>' + parseFloat(amount).toFixed(3) + '</td><td>' + sum + '</td><td class="actions" data-price="' + price + '">' + sellBuyButtons() + '</td></tr>';
     });
     return partial;
   }
@@ -144,7 +144,7 @@ jQuery(function($) {
     var partial = '';
     bids.forEach(function(bid) {
       var price = bid[0], amount = bid[1], sum = (price * amount).toFixed(2);
-      partial += '<tr class="danger"><td>B</td><td>' + price + '</td><td>' + amount + '</td><td>' + sum + '</td><td class="actions" data-price="' + price + '">' + sellBuyButtons() + '</td></tr>';
+      partial += '<tr class="danger"><td>B</td><td>' + price + '</td><td>' + parseFloat(amount).toFixed(3) + '</td><td>' + sum + '</td><td class="actions" data-price="' + price + '">' + sellBuyButtons() + '</td></tr>';
     });
     return partial;
   }
@@ -297,12 +297,6 @@ jQuery(function($) {
 
     clb();
     redrawOrdersList();
-
-    var pusher = new Pusher('de504dc5763aeef9ff52'), order_book_channel = pusher.subscribe('order_book');
-    order_book_channel.bind('data', function(payload) {
-      var topAsks = payload.asks.slice(0, 5), topBids = payload.bids.slice(0, 5);
-      $('#orderbookBitstamp tbody').html(renderAsks(topAsks) + renderBids(topBids));
-    });
   }
 
   init(redrawBalance);

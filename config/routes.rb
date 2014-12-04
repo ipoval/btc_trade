@@ -16,6 +16,10 @@ Rails.application.routes.draw do
   resources :buy_orders, only: [:create]
   resources :sell_orders, only: [:create]
 
+  namespace :bitstamp do
+    resource :account, only: [:show]
+  end
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
