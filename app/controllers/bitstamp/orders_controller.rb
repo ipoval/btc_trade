@@ -9,10 +9,15 @@ class OrdersController < ApplicationController
     render __method__, layout: false
   end
 
+  def destroy
+    order = Bitstamp.orders.find(order_id)
+    order.cancel! if order
+  end
+
   private
 
   def order_css_class(order)
-    order['category'] == 'sell' ? 'danger' : 'success'
+    order.type.zero? ? 'success' : 'danger'
   end
 
   def order_id

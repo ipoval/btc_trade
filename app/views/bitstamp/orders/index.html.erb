@@ -12,13 +12,13 @@
     </thead>
     <tbody style="font-size: smaller;">
       <% @orders.each do |order| %>
-        <%= content_tag(:tr, id: "order_#{order['id']}", class: order_css_class(order)) do %>
-          <td><%= Time.at(order['at']).to_s(:db) %></td>
-          <td><%= order['id'] %></td>
-          <td><%= order['amount'] %></td>
-          <td><%= order['ppc'] %></td>
-          <td><%= order['currency'] %></td>
-          <td><%= link_to '&times;'.html_safe, order_path(id: order['id']), method: 'delete', remote: true %></td>
+        <%= content_tag(:tr, id: "bitstamp_order_#{order.id}", class: order_css_class(order)) do %>
+          <td><%= order.datetime %></td>
+          <td><%= order.id %></td>
+          <td><%= order.amount %></td>
+          <td><%= order.price %></td>
+          <td>USD</td>
+          <td><%= link_to '&times;'.html_safe, bitstamp_order_path(id: order.id), method: 'delete', remote: true %></td>
         <% end %>
       <% end %>
     </tbody>

@@ -61,6 +61,7 @@ jQuery(function($) {
     global.TradeBitstampProxy = TradeBitstampProxy;
   })( this );
 
+  var self = this;
   this.TradeBitstampProxy.init();
 
   $(document).on('click', '#section-bitstamp-OneClickAmount button', function(event) {
@@ -84,16 +85,21 @@ jQuery(function($) {
     $.post('/bitstamp/buy_orders', { price: price, amount: amount }, function(data) {
       console.dir(data);
       if (data.error) { return; renderAlert(data.error.toString(), 'alert-danger'); }
+      self.TradeBitstampProxy.redrawBalance();
+      self.TradeBitstampProxy.redrawOrders();
     });
 
     //renderAlert('Buying: ' + price + ' &times; ' + amount, 'alert-info');
   }).on('click', '#orderbookBitstamp td.actions button.btn-sell', function() {
-    var cell = $(this).parents('td'), price = cell.data('price'), amount = $('#orderAmount').val();
+    var cell = $(this).parents('td'), price = cell.data('price'), amount = $('#bitstamp-order-amount').val();
 
     $.post('/bitstamp/sell_orders', { price: price, amount: amount }, function(data) {
       console.dir(data);
       if (data.error) { return; renderAlert(data.error.toString(), 'alert-danger'); }
+      self.TradeBitstampProxy.redrawBalance();
+      self.TradeBitstampProxy.redrawOrders();
     });
+
     //renderAlert('Selling: ' + price + ' &times; ' + amount, 'alert-info');
   });
 
