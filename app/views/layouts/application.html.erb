@@ -8,6 +8,28 @@
   <% # FIXME: use dynamic script include tag %>
   <%= javascript_include_tag 'https://d3dy5gmtp8yhk7.cloudfront.net/2.1/pusher.min.js' %>
   <%= csrf_meta_tags %>
+  <script>
+  /*
+   * ajax events hooks
+   */
+  $(document).ajaxSend(function(event, xhr, settings) {
+    if ( settings.type !== 'DELETE' ) { return true; }
+
+    var disableDeleteBtn = function(selector) {
+      if ( ! selector.size() ) { return; }
+      selector.removeClass('danger', 'success').addClass('warning');
+      selector.find('a[data-method="delete"]').hide();
+    };
+
+    if ( RegExp('/bitstamp/orders').test(settings.url) ) {
+      var id = settings.url.match(/^\/bitstamp\/orders\/(\d+)/)[1];
+      disableDeleteBtn($('#bitstamp_order_' + id));
+    } else if ( RegExp('/orders').test(settings.url) ) {
+      var id = settings.url.match(/^\/orders\/(\d+)/)[1];
+      disableDeleteBtn($('#order_' + id));
+    }
+  });
+  </script>
 </head>
 <body id="<%= body_page_id %>">
   <nav role="navigation" class="navbar navbar-fixed-top navbar-inverse">

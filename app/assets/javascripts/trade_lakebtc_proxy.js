@@ -302,20 +302,6 @@ jQuery(function($) {
   init(redrawBalance);
 
   /*
-   * ajax events hooks
-   */
-  $(document).ajaxSend(function(event, xhr, settings) {
-    if (settings.type === 'DELETE' && RegExp('orders').test(settings.url)) {
-      var deletingOrderId = settings.url.match(/^\/orders\/(\d+)/)[1],
-        orderRow = $('#order_' + deletingOrderId);
-      if (orderRow.size()) {
-        orderRow.removeClass('danger', 'success').addClass('warning');
-        orderRow.find('a[data-method="delete"]').hide();
-      }
-    }
-  });
-
-  /*
    * setting up the original amount for trade
    */
   $('#orderAmount').keypress(function(event) {

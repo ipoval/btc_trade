@@ -3,15 +3,12 @@ module Bitstamp
 class OrdersController < ApplicationController
   def index
     @orders = Bitstamp.orders.all
-    p "IP: +++++++++++++++++++++++++++++"
-    p @orders
-    p "IP: +++++++++++++++++++++++++++++"
     render __method__, layout: false
   end
 
   def destroy
-    order = Bitstamp.orders.find(order_id)
-    order.cancel! if order
+    @order = Bitstamp.orders.find(order_id)
+    @order.cancel! if @order
   end
 
   private
@@ -21,7 +18,7 @@ class OrdersController < ApplicationController
   end
 
   def order_id
-    params[:id]
+    Integer(params[:id])
   end
 
   helper_method :order_css_class, :order_id
