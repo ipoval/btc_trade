@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   root 'application#index'
 
-  # FIXME: move to resource
+  # FIXME: move to resource - fix this asap
   get '/account' => 'account#index'
   get '/account/edit' => 'account#edit', as: 'edit_account'
   put '/account/update' => 'account#update', as: 'update_account'
