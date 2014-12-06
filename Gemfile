@@ -39,4 +39,4 @@ gem 'debugger', group: [:development, :test]
 gem 'oj'
 gem 'oj_mimic_json'
 gem 'rotp'
-gem 'bitstamp'
+gem 'bitstamp', github: 'ipoval/bitstamp'
