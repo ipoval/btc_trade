@@ -178,17 +178,6 @@ jQuery(function($) {
   window.renderBuyAutoOrders = renderBuyAutoOrders;
   window.renderSellAutoOrders = renderSellAutoOrders;
 
-  function renderAlert(msg, _type) {
-    var type = _type || 'alert-success';
-    var alert = [
-      '<div id="tradeAlert" role="alert" class="navbar-fixed-top alert ' + type + ' alert-dismissible fade in">',
-        '<button data-dismiss="alert" class="close" type="button"><span aria-hidden="true">×</span><span class="sr-only">Close</span></button>',
-        msg,
-      '</div>'
-    ].join('');
-    $(alert).appendTo('body').fadeOut(2500, function() { $('#tradeAlert').remove(); });
-  }
-
   function autoBuy(price, volume, stopBuyV) {
     var orderV = parseFloat(localStorage.getItem('autoOrderBalance'));
     if ( orderV >= stopBuyV ) {
