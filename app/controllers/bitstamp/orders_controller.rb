@@ -17,7 +17,9 @@ class OrdersController < ApplicationController
   private
 
   def order_css_class(order)
-    (order.type.zero? ? 'success' : 'danger') + ' bitstamp_order'
+    if order.try(:type)
+      (order.type.zero? ? 'success' : 'danger') + ' bitstamp_order'
+    end
   end
 
   def order_id
