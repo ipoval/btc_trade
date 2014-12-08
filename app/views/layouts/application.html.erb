@@ -21,7 +21,11 @@
   }
 
   jQuery(function() {
-    /* ajax events hooks */
+    /*
+     * ajax events hooks
+     *
+     * ajax hook: started order delete request
+     */
     $(document).ajaxSend(function(event, xhr, settings) {
       if ( settings.type !== 'DELETE' ) { return true; }
 
@@ -40,7 +44,18 @@
       }
     });
 
-    /* setting up the original amount for trade */
+    /* ajax hook: completed with success order delete request */
+    $(document).ajaxSuccess(function(event, xhr, settings) {
+      if ( settings.type !== 'DELETE' ) { return true; }
+
+      if ( RegExp('/bitstamp/orders').test(settings.url) ) {
+        window.TradeBitstampProxy.redrawBalance();
+      }
+    });
+
+    /*
+     * set up order amount
+     */
     $('#orderAmount, #bitstamp-order-amount').change(function(event) {
       var _this = $(this), newVal = parseFloat(_this.val());
       if ( newVal > 0 ) {

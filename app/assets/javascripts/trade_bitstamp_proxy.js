@@ -139,6 +139,7 @@ jQuery(function($) {
 
     // expose our module to the global object
     global.TradeBitstampProxy = TradeBitstampProxy;
+    window.TradeBitstampProxy = TradeBitstampProxy;
   })( this );
 
   var self = this;
