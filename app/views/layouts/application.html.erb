@@ -42,15 +42,14 @@
 
     $(document).ajaxSend(function(event, xhr, settings) {
       if ( isBitstampOrderDelete(settings) ) {
+
         var id = settings.url.match(/^\/bitstamp\/orders\/(\d+)/)[1];
         disableDeleteBtn($('#bitstamp_order_' + id));
-        return;
-      }
 
-      if ( isLakeOrderDelete(settings) ) {
+      } else if ( isLakeOrderDelete(settings) ) {
+
         var id = settings.url.match(/^\/orders\/(\d+)/)[1];
         disableDeleteBtn($('#order_' + id));
-        return;
       }
     });
 
