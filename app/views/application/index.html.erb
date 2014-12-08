@@ -72,11 +72,15 @@
         <button class="btn btn-default" type="button" data-ind="10">&times;10</button>
         <button class="btn btn-default" type="button" data-ind="20">&times;20</button>
       </div>
+      &nbsp;
+      <%= link_to 'Auto order', new_bitstamp_order_path, remote: true %>
     </div>
   </div>
 </section>
 
-<section class="row" id="sectionAutoOrders">
+<section class="row">
+  <div id="sectionAutoOrders" class="col-lg-4"></div>
+  <div id="sectionBitstampAutoOrders" class="col-lg-4 col-lg-offset-3"></div>
 </section>
 
 <section class="row">

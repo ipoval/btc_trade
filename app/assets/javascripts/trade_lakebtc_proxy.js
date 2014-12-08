@@ -290,14 +290,11 @@ jQuery(function($) {
 
   init(redrawBalance);
 
-  /*
-   * setting up the original amount for trade
-   */
+  /* setting up the original amount for trade */
   $('#orderAmount').keypress(function(event) {
     var _this = $(this), newVal = parseFloat(_this.val());
     if ( newVal > 0 ) {
       $(this).val(newVal).data('value', newVal);
     }
   });
-
 });

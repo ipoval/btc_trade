@@ -6,6 +6,9 @@ class OrdersController < ApplicationController
     render __method__, layout: false
   end
 
+  def new
+  end
+
   def destroy
     @order = Bitstamp.orders.find(order_id)
     @order.cancel! if @order

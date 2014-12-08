@@ -4,6 +4,9 @@ class OrdersController < ApplicationController
     render __method__, layout: false
   end
 
+  def new
+  end
+
   def destroy
     client.cancel_order order_id
   end

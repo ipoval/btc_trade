@@ -1,3 +1,38 @@
+window.BitstampHelper = {
+  autoOrderP:       function() { return parseFloat(localStorage.getItem('autoOrderP')); },
+  autoOrderV:       function() { return parseFloat(localStorage.getItem('autoOrderV')); },
+  autoOrdersOn:     function() { return this.autoOrderP() && this.autoOrderV(); },
+  autoSellOrderP:   function() { return parseFloat(localStorage.getItem('autoSellOrderP')); },
+  autoSellOrderV:   function() { return parseFloat(localStorage.getItem('autoSellOrderV')); },
+  autoSellOrdersOn: function() { return this.autoSellOrderP() && this.autoSellOrderV(); },
+  createOrder: function(p, v) {
+    localStorage.setItem('autoOrderP', p);
+    localStorage.setItem('autoOrderV', v);
+  },
+  createAutoOrderSell: function(p, v) {
+    localStorage.setItem('autoSellOrderP', p);
+    localStorage.setItem('autoSellOrderV', v);
+  },
+  clearAutoOrders: function() {
+    this.clearBuyAutoOrders();
+    this.clearSellAutoOrders();
+  },
+  clearBuyAutoOrders: function() {
+    localStorage.removeItem('autoOrderP');
+    localStorage.removeItem('autoOrderV');
+    localStorage.setItem('autoOrderBalance', 0);
+    window.orderTransactionLock = false;
+    $('#ordersList tbody tr.auto-order.buy').remove();
+  },
+  clearSellAutoOrders: function() {
+    localStorage.removeItem('autoSellOrderP');
+    localStorage.removeItem('autoSellOrderV');
+    localStorage.setItem('autoSellOrderBalance', 0);
+    window.orderSellTransactionLock = false;
+    $('#ordersList tbody tr.auto-order.sell').remove();
+  }
+};
+
 jQuery(function($) {
   /* page: / */
   if ( ! $('#application_index').size() ) { return; }
@@ -41,6 +76,49 @@ jQuery(function($) {
         redrawBalance: function() { $('#section-bitstamp-account-balance').load('/bitstamp/account'); },
         redrawOrders: function() { $('#section-bitstamp-orders').load('/bitstamp/orders'); },
 
+        autoBuyOrders: function() {
+          if ( ! window.BitstampHelper.autoOrdersOn() ) { return; }
+          if ( window.bitstampOrderTransactionLock ) { return console.info('bitstamp auto-order exclusive lock'); }
+
+          var curAskP = parseFloat($('#bitstamp-orderbook-current-price').data('price')),
+            curAskV = parseFloat($('#orderbook-current-price').data('ask-volume')),
+            stopBuyP = window.BTCHelper.autoOrderP(),
+            stopBuyV = window.BTCHelper.autoOrderV();
+
+          if ( curAskP >= stopBuyP ) { return console.info('auto-order price is too high'); }
+          autoBuy(curAskP, curAskV, stopBuyV);
+          renderAlert('auto-order long queued: ' + stopBuyP + ' / ' + stopBuyV);
+        },
+        autoBuy: function(price, volume, stopBuyV) {
+          var orderV = parseFloat(localStorage.getItem('autoOrderBalance'));
+          if ( orderV >= stopBuyV ) {
+            window.BTCHelper.clearBuyAutoOrders();
+            renderAlert('auto-order: complete / reached volume limit');
+            window.orderTransactionLock = false;
+            return;
+          }
+
+          window.orderTransactionLock = true;
+
+          var volToBuy = Math.min(volume, stopBuyV - orderV);
+          renderAlert('auto-order: buying ' + price + ' / ' + volToBuy, 'alert-warning');
+
+          $.post('/buy_orders', { price: price, amount: volToBuy }, function(data) {
+            if ( data.error || !data.result ) {
+              console.dir(data.error);
+              window.orderTransactionLock = false;
+              clearBuyAutoOrders();
+              return;
+            }
+
+            console.info('Volume traded: ' + data.result.total_traded_btc); console.dir(data);
+            var vol = data.result.total_traded_btc;
+            localStorage.setItem('autoOrderBalance',  orderV + vol);
+            window.orderTransactionLock = false;
+            afterTransaction(data);
+          });
+        },
+
         init: function() {
           var self = this,
             order_book_channel = this.getPusher().subscribe('order_book');
@@ -48,6 +126,8 @@ jQuery(function($) {
           order_book_channel.bind('data', function(payload) {
             var topAsks = payload.asks.slice(0, 5), topBids = payload.bids.slice(0, 5);
             $('#orderbookBitstamp tbody').html(self.renderAsks(topAsks) + self.renderBids(topBids));
+
+            self.autoBuyOrders();
           });
 
           this.redrawBalance();
@@ -85,22 +165,29 @@ jQuery(function($) {
     $.post('/bitstamp/buy_orders', { price: price, amount: amount }, function(data) {
       console.dir(data);
       if (data.error) { return renderAlert(data.error.__all__.toString(), 'alert-danger'); }
-      self.TradeBitstampProxy.redrawBalance();
       self.TradeBitstampProxy.redrawOrders();
+      self.TradeBitstampProxy.redrawBalance();
     });
 
-    // renderAlert('Bitstamp buying: ' + price + ' &times; ' + amount, 'alert-info');
+    renderAlert('Bitstamp buying: ' + price + ' &times; ' + amount, 'alert-info');
   }).on('click', '#orderbookBitstamp td.actions button.btn-sell', function() {
     var cell = $(this).parents('td'), price = cell.data('price'), amount = $('#bitstamp-order-amount').val();
 
     $.post('/bitstamp/sell_orders', { price: price, amount: amount }, function(data) {
       console.dir(data);
       if (data.error) { return renderAlert(data.error.__all__.toString(), 'alert-danger'); }
-      self.TradeBitstampProxy.redrawBalance();
       self.TradeBitstampProxy.redrawOrders();
+      self.TradeBitstampProxy.redrawBalance();
     });
 
-    // renderAlert('Bitstamp selling: ' + price + ' &times; ' + amount, 'alert-info');
+    renderAlert('Bitstamp selling: ' + price + ' &times; ' + amount, 'alert-info');
   });
 
+  /* setting up the original amount for trade */
+  $('#bitstamp-order-amount').keypress(function(event) {
+    var _this = $(this), newVal = parseFloat(_this.val());
+    if ( newVal > 0 ) {
+      $(this).val(newVal).data('value', newVal);
+    }
+  });
 });

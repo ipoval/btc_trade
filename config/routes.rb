@@ -18,7 +18,7 @@ Rails.application.routes.draw do
 
   namespace :bitstamp do
     resource :account, only: [:show]
-    resources :orders, only: [:index, :destroy]
+    resources :orders, only: [:index, :new, :destroy]
     resources :buy_orders, only: [:create]
     resources :sell_orders, only: [:create]
   end

@@ -1,0 +1,5 @@
+if ( $('#sectionBitstampAutoOrders form').size() > 0 ) {
+  $('#sectionBitstampAutoOrders').empty();
+} else {
+  $('#sectionBitstampAutoOrders').html("<%=j render partial: 'new_order_form' %>");
+}
