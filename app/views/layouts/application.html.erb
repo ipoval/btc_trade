@@ -9,27 +9,6 @@
   <%= javascript_include_tag 'https://d3dy5gmtp8yhk7.cloudfront.net/2.1/pusher.min.js' %>
   <%= csrf_meta_tags %>
   <script>
-  /*
-   * ajax events hooks
-   */
-  $(document).ajaxSend(function(event, xhr, settings) {
-    if ( settings.type !== 'DELETE' ) { return true; }
-
-    var disableDeleteBtn = function(selector) {
-      if ( ! selector.size() ) { return; }
-      selector.removeClass('danger', 'success').addClass('warning');
-      selector.find('a[data-method="delete"]').hide();
-    };
-
-    if ( RegExp('/bitstamp/orders').test(settings.url) ) {
-      var id = settings.url.match(/^\/bitstamp\/orders\/(\d+)/)[1];
-      disableDeleteBtn($('#bitstamp_order_' + id));
-    } else if ( RegExp('/orders').test(settings.url) ) {
-      var id = settings.url.match(/^\/orders\/(\d+)/)[1];
-      disableDeleteBtn($('#order_' + id));
-    }
-  });
-
   function renderAlert(msg, _type) {
     var type = _type || 'alert-success';
     var alert = [
@@ -40,6 +19,36 @@
     ].join('');
     $(alert).appendTo('body').fadeOut(2500, function() { $('#tradeAlert').remove(); });
   }
+
+  jQuery(function() {
+    /* ajax events hooks */
+    $(document).ajaxSend(function(event, xhr, settings) {
+      if ( settings.type !== 'DELETE' ) { return true; }
+
+      var disableDeleteBtn = function(selector) {
+        if ( ! selector.size() ) { return; }
+        selector.removeClass('danger', 'success').addClass('warning');
+        selector.find('a[data-method="delete"]').hide();
+      };
+
+      if ( RegExp('/bitstamp/orders').test(settings.url) ) {
+        var id = settings.url.match(/^\/bitstamp\/orders\/(\d+)/)[1];
+        disableDeleteBtn($('#bitstamp_order_' + id));
+      } else if ( RegExp('/orders').test(settings.url) ) {
+        var id = settings.url.match(/^\/orders\/(\d+)/)[1];
+        disableDeleteBtn($('#order_' + id));
+      }
+    });
+
+    /* setting up the original amount for trade */
+    $('#orderAmount, #bitstamp-order-amount').change(function(event) {
+      var _this = $(this), newVal = parseFloat(_this.val());
+      if ( newVal > 0 ) {
+        _this.val(newVal);
+        _this.data('value', newVal);
+      }
+    });
+  });
 </script>
 </head>
 <body id="<%= body_page_id %>">

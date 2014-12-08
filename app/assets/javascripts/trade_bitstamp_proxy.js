@@ -182,12 +182,4 @@ jQuery(function($) {
 
     renderAlert('Bitstamp selling: ' + price + ' &times; ' + amount, 'alert-info');
   });
-
-  /* setting up the original amount for trade */
-  $('#bitstamp-order-amount').keypress(function(event) {
-    var _this = $(this), newVal = parseFloat(_this.val());
-    if ( newVal > 0 ) {
-      $(this).val(newVal).data('value', newVal);
-    }
-  });
 });
