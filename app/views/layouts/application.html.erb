@@ -26,29 +26,37 @@
      *
      * ajax hook: started order delete request
      */
+    var isBitstampOrderDelete = function(settings) {
+      return (settings.type === 'DELETE')
+        && RegExp('/bitstamp/orders').test(settings.url);
+    };
+    var isLakeOrderDelete = function(settings) {
+      return (settings.type === 'DELETE')
+        && RegExp('/orders').test(settings.url);
+    };
+    var disableDeleteBtn = function(selector) {
+      if ( ! selector.size() ) { return; }
+      selector.removeClass('danger', 'success').addClass('warning');
+      selector.find('a[data-method="delete"]').hide();
+    };
+
     $(document).ajaxSend(function(event, xhr, settings) {
-      if ( settings.type !== 'DELETE' ) { return true; }
-
-      var disableDeleteBtn = function(selector) {
-        if ( ! selector.size() ) { return; }
-        selector.removeClass('danger', 'success').addClass('warning');
-        selector.find('a[data-method="delete"]').hide();
-      };
-
-      if ( RegExp('/bitstamp/orders').test(settings.url) ) {
+      if ( isBitstampOrderDelete(settings) ) {
         var id = settings.url.match(/^\/bitstamp\/orders\/(\d+)/)[1];
         disableDeleteBtn($('#bitstamp_order_' + id));
-      } else if ( RegExp('/orders').test(settings.url) ) {
+        return;
+      }
+
+      if ( isLakeOrderDelete(settings) ) {
         var id = settings.url.match(/^\/orders\/(\d+)/)[1];
         disableDeleteBtn($('#order_' + id));
+        return;
       }
     });
 
     /* ajax hook: completed with success order delete request */
     $(document).ajaxSuccess(function(event, xhr, settings) {
-      if ( settings.type !== 'DELETE' ) { return true; }
-
-      if ( RegExp('/bitstamp/orders').test(settings.url) ) {
+      if ( isBitstampOrderDelete(settings) ) {
         window.TradeBitstampProxy.redrawBalance();
       }
     });
