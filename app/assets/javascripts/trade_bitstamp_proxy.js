@@ -30,7 +30,8 @@ window.BitstampHelper = {
     localStorage.setItem('autoSellOrderBalance', 0);
     window.orderSellTransactionLock = false;
     $('#ordersList tbody tr.auto-order.sell').remove();
-  }
+  },
+  ordersRefreshTimeout: null
 };
 
 jQuery(function($) {
@@ -74,7 +75,22 @@ jQuery(function($) {
         },
 
         redrawBalance: function() { $('#section-bitstamp-account-balance').load('/bitstamp/account'); },
-        redrawOrders: function() { $('#section-bitstamp-orders').load('/bitstamp/orders'); },
+        redrawOrders: function() {
+          var self = this;
+
+          $('#section-bitstamp-orders').load('/bitstamp/orders', function() {
+            /* refresh orders & balance automatically */
+            var ordersSize = parseInt($('#bitstamp-orders-list').data('orders-size'));
+            if ( ordersSize ) {
+              window.BitstampHelper.ordersRefreshTimeout = setTimeout(function() {
+                self.redrawBalance();
+                self.redrawOrders();
+              }, 3000);
+            } else {
+              clearTimeout(window.BitstampHelper.ordersRefreshTimeout);
+            }
+          });
+        },
 
         autoBuyOrders: function() {
           if ( ! window.BitstampHelper.autoOrdersOn() ) { return; }
@@ -177,6 +193,7 @@ jQuery(function($) {
     $.post('/bitstamp/sell_orders', { price: price, amount: amount }, function(data) {
       console.dir(data);
       if (data.error) { return renderAlert(data.error.__all__.toString(), 'alert-danger'); }
+
       self.TradeBitstampProxy.redrawOrders();
       self.TradeBitstampProxy.redrawBalance();
     });

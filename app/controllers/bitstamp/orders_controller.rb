@@ -17,7 +17,7 @@ class OrdersController < ApplicationController
   private
 
   def order_css_class(order)
-    order.type.zero? ? 'success' : 'danger'
+    (order.type.zero? ? 'success' : 'danger') + ' bitstamp_order'
   end
 
   def order_id
