@@ -23,7 +23,11 @@ body {
 nav > .containter {
   margin: 0 !important;
 }
+nav + .container {
+  width: 1320px;
+}
 .col-lg-4 {
+  width: 27%;
   padding-left: 0px !important;
 }
 #orderbook td.actions {
