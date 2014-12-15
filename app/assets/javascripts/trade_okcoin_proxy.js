@@ -1,6 +1,6 @@
 var apiKey="";
 var secretKey="";
-var wsUri ="wss://real.okcoin.com:10440/websocket/okcoinapi";
+var wsUri ="wss://real.okcoin.cn:10440/websocket/okcoinapi";
 var output;
 var lastHeartBeat = new Date().getTime();
 var overtime = 5000;
@@ -42,7 +42,7 @@ function testWebSocket() {
   };
 }
 function onOpen(evt) {
-  doSend("{'event':'addChannel','channel':'ok_btcusd_depth'}");
+  doSend("{'event':'addChannel','channel':'ok_btccny_depth'}");
 }
 function onClose(evt) {
   console.info('okcoin websocket disconnected');
