@@ -1,15 +1,8 @@
 var apiKey="";
 var secretKey="";
 var wsUri ="wss://real.okcoin.cn:10440/websocket/okcoinapi";
-var output;
 var lastHeartBeat = new Date().getTime();
 var overtime = 5000;
-
-function init() {
-  output = document.getElementById("output");
-  testWebSocket();
-  // setInterval(checkConnect, 4000);
-}
 
 function checkConnect() {
   websocket.send("{'event':'ping'}");
@@ -93,6 +86,16 @@ function renderBidsOkcoin(bids) {
     partial += '<tr class="danger"><td>B</td><td>' + price + '</td><td>' + amount + '</td><td>' + sum + '</td><td class="actions" data-price="' + price + '">' + sellBuyButtonsOkcoin() + '</td></tr>';
   });
   return partial;
+}
+
+function redrawBalanceOkcoin() { $('#section-okcoin-account-balance').load('/okcoin/account'); }
+function redrawOrdersOkcoin() { $('#section-okcoin-orders').load('/okcoin/orders'); }
+
+function init() {
+  testWebSocket();
+  // setInterval(checkConnect, 4000);
+  redrawBalanceOkcoin();
+  redrawOrdersOkcoin();
 }
 
 $(document).on('mouseenter', '#orderbookOkcoin td.actions', function(event) {

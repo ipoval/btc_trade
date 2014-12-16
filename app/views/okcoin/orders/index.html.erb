@@ -1,0 +1,26 @@
+<div class="table-responsive">
+  <table id="bitstamp-orders-list" class="table table-condensed table-hover" data-orders-size="<%= @orders.size %>">
+    <thead>
+      <tr>
+        <th>Time</th>
+        <th>#</th>
+        <th>Amnt</th>
+        <th>PPC</th>
+        <th>Curr</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody style="font-size: smaller;">
+      <% @orders.each do |order| %>
+        <%= content_tag(:tr, id: "okcoin_order_#{order.id}", class: order_css_class(order)) do %>
+          <td><%= order.datetime %></td>
+          <td><%= order.id %></td>
+          <td><%= order.amount %></td>
+          <td><%= order.price %></td>
+          <td>USD</td>
+          <td><%= link_to '&times;'.html_safe, okcoin_order_path(id: order.id), method: 'delete', remote: true %></td>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+</div>

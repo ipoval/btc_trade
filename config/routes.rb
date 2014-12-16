@@ -23,6 +23,13 @@ Rails.application.routes.draw do
     resources :sell_orders, only: [:create]
   end
 
+  namespace :okcoin do
+    resource :account, only: [:show]
+    resources :orders, only: [:index, :new, :destroy]
+    resources :buy_orders, only: [:create]
+    resources :sell_orders, only: [:create]
+  end
+
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
