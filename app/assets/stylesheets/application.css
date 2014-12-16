@@ -30,18 +30,12 @@ nav + .container {
   width: 27%;
   padding-left: 0px !important;
 }
-#orderbook td.actions {
+
+#orderbook td.actions, #orderbookBitstamp td.actions, #orderbookOkcoin td.actions {
   position: relative;
 }
-#orderbook td.actions span {
-  left: -100px;
-  position: absolute;
-  top: 8px;
-}
-#orderbookBitstamp td.actions {
-  position: relative;
-}
-#orderbookBitstamp td.actions span {
+
+#orderbook td.actions span, #orderbookBitstamp td.actions span, #orderbookOkcoin td.actions span {
   left: -100px;
   position: absolute;
   top: 8px;

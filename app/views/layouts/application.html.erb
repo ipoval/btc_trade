@@ -63,7 +63,7 @@
     /*
      * set up order amount
      */
-    $('#orderAmount, #bitstamp-order-amount').change(function(event) {
+    $('#orderAmount, #bitstamp-order-amount, #okcoin-order-amount').change(function(event) {
       var _this = $(this), newVal = parseFloat(_this.val());
       if ( newVal > 0 ) {
         _this.val(newVal);

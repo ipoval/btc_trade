@@ -55,6 +55,8 @@ function doSend(message) {
   websocket.send(message);
 }
 
+window.addEventListener("load", init, false);
+
 function onMessage(evt) {
   var payload = JSON.parse(evt.data);
 
@@ -65,11 +67,21 @@ function onMessage(evt) {
   }
 }
 
+function sellBuyButtonsOkcoin() {
+  var btns = [
+    '<div aria-label="" role="group" class="btn-group btn-group-xs">',
+      '<button type="button" class="btn btn-default btn-buy">buy</button>',
+      '<button type="button" class="btn btn-default btn-sell">sell</button>',
+    '</div>'
+  ].join('');
+  return btns;
+}
+
 function renderAsksOkcoin(asks) {
   var self = this, partial = '';
   asks.reverse().forEach(function(ask) {
     var price = ask[0], amount = parseFloat(ask[1]).toFixed(3), sum = (price * amount).toFixed(2);
-    partial += '<tr class="success"><td>A</td><td>' + price + '</td><td>' + amount + '</td><td>' + sum + '</td><td class="actions" data-price="' + price + '">' + '' + '</td></tr>';
+    partial += '<tr class="success"><td>A</td><td>' + price + '</td><td>' + amount + '</td><td>' + sum + '</td><td class="actions" data-price="' + price + '">' + sellBuyButtonsOkcoin() + '</td></tr>';
   });
   return partial;
 }
@@ -78,9 +90,15 @@ function renderBidsOkcoin(bids) {
   var self = this, partial = '';
   bids.forEach(function(bid) {
     var price = bid[0], amount = parseFloat(bid[1]).toFixed(3), sum = (price * amount).toFixed(2);
-    partial += '<tr class="danger"><td>B</td><td>' + price + '</td><td>' + amount + '</td><td>' + sum + '</td><td class="actions" data-price="' + price + '">' + '' + '</td></tr>';
+    partial += '<tr class="danger"><td>B</td><td>' + price + '</td><td>' + amount + '</td><td>' + sum + '</td><td class="actions" data-price="' + price + '">' + sellBuyButtonsOkcoin() + '</td></tr>';
   });
   return partial;
 }
 
-window.addEventListener("load", init, false);
+$(document).on('mouseenter', '#orderbookOkcoin td.actions', function(event) {
+  var cell = $(this), price = cell.data('price'), amount = $('#okcoin-order-amount').val(), span = $('<span class="label label-danger"></span>');
+  span.data('price', price).html(price + ' / ' + amount);
+  cell.prepend(span);
+}).on('mouseleave', '#orderbookOkcoin td.actions', function(event) {
+  $(this).find('span').remove();
+})

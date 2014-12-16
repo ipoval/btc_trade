@@ -94,19 +94,42 @@
       <%= link_to '+ auto order', new_bitstamp_order_path, remote: true %>
     </div>
   </div>
+
+  <div id="section-okcoin-OneClickAmount" class="col-lg-4 col-lg-offset-1">
+    <div class="form-group">
+      <div class="input-group input-group-sm">
+        <span class="input-group-addon">Order Amount (BTC)</span>
+        <input id="okcoin-order-amount" name="okcoin-order-amount" type="text" class="form-control" placeholder="0.01" value="0.01" data-value="0.01">
+      </div>
+    </div>
+    <div id="multipliers" class="form-group">
+      <div aria-label="First group" role="group" class="btn-group btn-group-sm">
+        <button class="btn btn-default" type="button" data-ind="1">&times;1</button>
+        <button class="btn btn-default" type="button" data-ind="2">&times;2</button>
+        <button class="btn btn-default" type="button" data-ind="5">&times;5</button>
+        <button class="btn btn-default" type="button" data-ind="10">&times;10</button>
+        <button class="btn btn-default" type="button" data-ind="20">&times;20</button>
+      </div>
+      &nbsp;
+      <%= link_to '+ auto order', new_bitstamp_order_path, remote: true %>
+    </div>
+  </div>
 </section>
 
 <section class="row">
   <div id="sectionAutoOrders" class="col-lg-4"></div>
   <div id="sectionBitstampAutoOrders" class="col-lg-4 col-lg-offset-1"></div>
+  <div id="sectionOkcoinAutoOrders" class="col-lg-4 col-lg-offset-1"></div>
 </section>
 
 <section class="row">
   <div id="sectionAccountBalance" class="col-lg-4"></div>
   <div id="section-bitstamp-account-balance" class="col-lg-4 col-lg-offset-1"></div>
+  <div id="section-okcoin-account-balance" class="col-lg-4 col-lg-offset-1"></div>
 </section>
 
 <section class="row">
   <div id="sectionOrdersList" class="col-lg-4"></div>
   <div id="section-bitstamp-orders" class="col-lg-4 col-lg-offset-1"></div>
+  <div id="section-okcoin-orders" class="col-lg-4 col-lg-offset-1"></div>
 </section>
