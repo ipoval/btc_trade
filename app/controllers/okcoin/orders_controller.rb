@@ -10,8 +10,7 @@ class OrdersController < ApplicationController
   end
 
   def destroy
-    @order = Bitstamp.orders.find(order_id)
-    @order.cancel! if @order
+    OkcoinProxy.new.delete(order_id)
   end
 
   private
