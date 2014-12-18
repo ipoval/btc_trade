@@ -1,4 +1,4 @@
-module Bitstamp
+module Okcoin
 
 class SellOrdersController < ApplicationController
   def create

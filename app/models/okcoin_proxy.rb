@@ -2,6 +2,7 @@ class OkcoinProxy
   def initialize
     @api_key    = 'e931ae89-0b8f-48f3-ac21-1ed8de289c84'
     @secret_key = '51DEB5CB61E3E8142CFCBB3106E5D10A'
+    @params = { 'api_key' => @api_key }
   end
 
   def account_id
@@ -9,8 +10,41 @@ class OkcoinProxy
   end
 
   def account
-    @params = { 'api_key' => @api_key }
     @url = 'https://www.okcoin.cn/api/v1/userinfo.do'
+    rest_request
+  end
+
+  def buy(amount: 0, price: 0)
+    buy_params = {
+      'amount' => amount,
+      'price'  => price,
+      'symbol' => 'btc_cny',
+      'type'   => 'buy'
+    }
+    @params = @params.merge(buy_params).sort.to_h
+    @url = 'https://www.okcoin.cn/api/v1/trade.do'
+    rest_request
+  end
+
+  def sell(amount: 0, price: 0)
+    sell_params = {
+      'amount' => amount,
+      'price'  => price,
+      'symbol' => 'btc_cny',
+      'type'   => 'sell'
+    }
+    @params = @params.merge(sell_params).sort.to_h
+    @url = 'https://www.okcoin.cn/api/v1/trade.do'
+    rest_request
+  end
+
+  def orders
+    orders_params = {
+      'symbol'   => 'btc_cny',
+      'order_id' => -1
+    }
+    @params = @params.merge(orders_params).sort.to_h
+    @url = 'https://www.okcoin.cn/api/v1/order_info.do'
     rest_request
   end
 
@@ -28,7 +62,7 @@ class OkcoinProxy
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     end
 
-    # http.set_debug_output($stdout)
+    http.set_debug_output($stdout)
 
     request = Net::HTTP::Post.new(uri.path)
     request.set_form_data(post_params)

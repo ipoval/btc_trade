@@ -2,7 +2,7 @@ module Okcoin
 
 class OrdersController < ApplicationController
   def index
-    @orders = []
+    @orders = OkcoinProxy.new.orders['orders']
     render __method__, layout: false
   end
 
@@ -18,7 +18,7 @@ class OrdersController < ApplicationController
 
   def order_css_class(order)
     if order.try(:type)
-      (order.type.zero? ? 'success' : 'danger') + ' bitstamp_order'
+      (order.type.zero? ? 'success' : 'danger') + ' okcoin_order'
     end
   end
 

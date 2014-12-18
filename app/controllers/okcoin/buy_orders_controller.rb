@@ -1,8 +1,9 @@
-module Bitstamp
+module Okcoin
 
 class BuyOrdersController < ApplicationController
   def create
-    result = Bitstamp.orders.buy(amount: order_amount, price: order_price)
+    okcoin = OkcoinProxy.new
+    result = okcoin.buy(amount: order_amount, price: order_price)
     render(json: result)
   end
 

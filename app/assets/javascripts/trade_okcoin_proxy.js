@@ -102,6 +102,30 @@ $(document).on('mouseenter', '#orderbookOkcoin td.actions', function(event) {
   var cell = $(this), price = cell.data('price'), amount = $('#okcoin-order-amount').val(), span = $('<span class="label label-danger"></span>');
   span.data('price', price).html(price + ' / ' + amount);
   cell.prepend(span);
+
 }).on('mouseleave', '#orderbookOkcoin td.actions', function(event) {
   $(this).find('span').remove();
-})
+
+}).on('click', '#orderbookOkcoin td.actions button.btn-buy', function() {
+  var cell = $(this).parents('td'), price = cell.data('price'), amount = $('#okcoin-order-amount').val();
+  $.post('/okcoin/buy_orders', { price: price, amount: amount }, function(data) {
+    console.dir(data);
+    if ( !data.result ) { return renderAlert(data.error_code, 'alert-danger'); }
+
+    // self.TradeBitstampProxy.redrawOrders();
+    // self.TradeBitstampProxy.redrawBalance();
+  });
+  renderAlert('Okcoin buying: ' + price + ' &times; ' + amount, 'alert-info');
+
+}).on('click', '#orderbookOkcoin td.actions button.btn-sell', function() {
+  var cell = $(this).parents('td'), price = cell.data('price'), amount = $('#okcoin-order-amount').val();
+  $.post('/okcoin/sell_orders', { price: price, amount: amount }, function(data) {
+    console.dir(data);
+    if ( !data.result ) { return renderAlert(data.error_code, 'alert-danger'); }
+
+    // self.TradeBitstampProxy.redrawOrders();
+    // self.TradeBitstampProxy.redrawBalance();
+  });
+  renderAlert('Okcoin selling: ' + price + ' &times; ' + amount, 'alert-info');
+
+});
