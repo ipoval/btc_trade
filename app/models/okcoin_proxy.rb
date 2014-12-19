@@ -14,6 +14,16 @@ class OkcoinProxy
     rest_request
   end
 
+  def cancel(order_id)
+    del_params = {
+      'order_id' => order_id,
+      'symbol'   => 'btc_cny'
+    }
+    @params = @params.merge(del_params).sort.to_h
+    @url = 'https://www.okcoin.cn/api/v1/cancel_order.do'
+    rest_request
+  end
+
   def buy(amount: 0, price: 0)
     buy_params = {
       'amount' => amount,

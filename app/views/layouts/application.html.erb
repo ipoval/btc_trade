@@ -34,6 +34,11 @@
       return (settings.type === 'DELETE')
         && RegExp('/orders').test(settings.url);
     };
+    var isOkcoinOrderDelete = function(settings) {
+      return (settings.type === 'DELETE')
+        && RegExp('/okcoin/orders').test(settings.url);
+    };
+
     var disableDeleteBtn = function(selector) {
       if ( ! selector.size() ) { return; }
       selector.removeClass('danger', 'success').addClass('warning');
@@ -46,6 +51,11 @@
         var id = settings.url.match(/^\/bitstamp\/orders\/(\d+)/)[1];
         disableDeleteBtn($('#bitstamp_order_' + id));
 
+      } else if ( isOkcoinOrderDelete(settings) ) {
+
+        var id = settings.url.match(/^\/okcoin\/orders\/(\d+)/)[1];
+        disableDeleteBtn($('#okcoin_order_' + id));
+
       } else if ( isLakeOrderDelete(settings) ) {
 
         var id = settings.url.match(/^\/orders\/(\d+)/)[1];
@@ -57,6 +67,10 @@
     $(document).ajaxSuccess(function(event, xhr, settings) {
       if ( isBitstampOrderDelete(settings) ) {
         window.TradeBitstampProxy.redrawBalance();
+      }
+
+      if ( isOkcoinOrderDelete(settings) ) {
+        window.redrawBalanceOkcoin();
       }
     });
 

@@ -1,5 +1,5 @@
 <div class="table-responsive">
-  <table id="bitstamp-orders-list" class="table table-condensed table-hover" data-orders-size="<%= @orders.size %>">
+  <table id="okcoin-orders-list" class="table table-condensed table-hover" data-orders-size="<%= @orders.size %>">
     <thead>
       <tr>
         <th>Time</th>
@@ -12,13 +12,13 @@
     </thead>
     <tbody style="font-size: smaller;">
       <% @orders.each do |order| %>
-        <%= content_tag(:tr, id: "okcoin_order_#{order.id}", class: order_css_class(order)) do %>
-          <td><%= order.datetime %></td>
-          <td><%= order.id %></td>
-          <td><%= order.amount %></td>
-          <td><%= order.price %></td>
-          <td>USD</td>
-          <td><%= link_to '&times;'.html_safe, okcoin_order_path(id: order.id), method: 'delete', remote: true %></td>
+        <%= content_tag(:tr, id: "okcoin_order_#{order['order_id']}", class: order_css_class(order)) do %>
+          <td><%= Time.at(order['create_date']/1000).to_s(:db) %></td>
+          <td><%= order['order_id'] %></td>
+          <td><%= order['amount'] %></td>
+          <td><%= order['price'] %></td>
+          <td>CN¥</td>
+          <td><%= link_to '&times;'.html_safe, okcoin_order_path(id: order['order_id']), method: 'delete', remote: true %></td>
         <% end %>
       <% end %>
     </tbody>

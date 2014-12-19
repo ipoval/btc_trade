@@ -1,6 +1,7 @@
 module Okcoin
 
 class OrdersController < ApplicationController
+  # {"amount"=>0.01, "avg_price"=>0, "create_date"=>1418961233000, "deal_amount"=>0, "order_id"=>190646782, "orders_id"=>190646782, "price"=>1900.1, "status"=>0, "symbol"=>"btc_cny", "type"=>"sell"}
   def index
     @orders = OkcoinProxy.new.orders['orders']
     render __method__, layout: false
@@ -10,14 +11,14 @@ class OrdersController < ApplicationController
   end
 
   def destroy
-    OkcoinProxy.new.delete(order_id)
+    OkcoinProxy.new.cancel(order_id)
   end
 
   private
 
   def order_css_class(order)
-    if order.try(:type)
-      (order.type.zero? ? 'success' : 'danger') + ' okcoin_order'
+    if order['type']
+      (order['type'] == 'buy' ? 'success' : 'danger') + ' okcoin_order'
     end
   end
 

@@ -88,7 +88,8 @@ function renderBidsOkcoin(bids) {
   return partial;
 }
 
-function redrawBalanceOkcoin() { $('#section-okcoin-account-balance').load('/okcoin/account'); }
+var redrawBalanceOkcoin = function() { $('#section-okcoin-account-balance').load('/okcoin/account'); }
+window.redrawBalanceOkcoin = redrawBalanceOkcoin;
 function redrawOrdersOkcoin() { $('#section-okcoin-orders').load('/okcoin/orders'); }
 
 function init() {
@@ -98,7 +99,15 @@ function init() {
   redrawOrdersOkcoin();
 }
 
-$(document).on('mouseenter', '#orderbookOkcoin td.actions', function(event) {
+$(document).on('click', '#section-okcoin-OneClickAmount button', function(event) {
+  var focusedBtn = $('#section-okcoin-OneClickAmount button.focus');
+  if ( focusedBtn.size() ) { focusedBtn.removeClass('focus'); }
+  /* update volume in form */
+  var btn = $(this), field = $('#okcoin-order-amount'), updatedBidAmount = parseFloat(field.data('value')) * parseInt(btn.data('ind'));
+  field.val(updatedBidAmount.toFixed(4));
+  btn.addClass('focus');
+
+}).on('mouseenter', '#orderbookOkcoin td.actions', function(event) {
   var cell = $(this), price = cell.data('price'), amount = $('#okcoin-order-amount').val(), span = $('<span class="label label-danger"></span>');
   span.data('price', price).html(price + ' / ' + amount);
   cell.prepend(span);
@@ -112,8 +121,8 @@ $(document).on('mouseenter', '#orderbookOkcoin td.actions', function(event) {
     console.dir(data);
     if ( !data.result ) { return renderAlert(data.error_code, 'alert-danger'); }
 
-    // self.TradeBitstampProxy.redrawOrders();
-    // self.TradeBitstampProxy.redrawBalance();
+    redrawBalanceOkcoin();
+    redrawOrdersOkcoin();
   });
   renderAlert('Okcoin buying: ' + price + ' &times; ' + amount, 'alert-info');
 
@@ -123,8 +132,8 @@ $(document).on('mouseenter', '#orderbookOkcoin td.actions', function(event) {
     console.dir(data);
     if ( !data.result ) { return renderAlert(data.error_code, 'alert-danger'); }
 
-    // self.TradeBitstampProxy.redrawOrders();
-    // self.TradeBitstampProxy.redrawBalance();
+    redrawBalanceOkcoin()
+    redrawOrdersOkcoin();
   });
   renderAlert('Okcoin selling: ' + price + ' &times; ' + amount, 'alert-info');
 
