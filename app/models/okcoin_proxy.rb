@@ -1,7 +1,8 @@
 class OkcoinProxy
-  def initialize
-    @api_key    = 'e931ae89-0b8f-48f3-ac21-1ed8de289c84'
-    @secret_key = '51DEB5CB61E3E8142CFCBB3106E5D10A'
+  # FIXME: extract those values from here
+  def initialize(api_key: 'e931ae89-0b8f-48f3-ac21-1ed8de289c84', secret_key: '51DEB5CB61E3E8142CFCBB3106E5D10A')
+    @api_key    = api_key
+    @secret_key = secret_key
     @params = { 'api_key' => @api_key }
   end
 
@@ -72,7 +73,7 @@ class OkcoinProxy
       http.verify_mode = OpenSSL::SSL::VERIFY_NONE
     end
 
-    http.set_debug_output($stdout)
+#    http.set_debug_output($stdout)
 
     request = Net::HTTP::Post.new(uri.path)
     request.set_form_data(post_params)

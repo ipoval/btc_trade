@@ -1,0 +1,43 @@
+<div class="col-lg-4">
+  <table id="bitstamp-account-balance" class="table table-condensed table-hover">
+    <thead>
+      <tr><th>Balance</th><th>USD</th><th>BTC</th></tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><%= Rails.application.secrets.bitstamp['client_id'] %></td>
+        <td id="usdBalance"><%= number_to_currency @account.usd_available %></td>
+        <td id="btkBalance"><%= @account.btc_available %></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <section id="sectionAccountEdit">
+    <%= form_tag bitstamp_account_path, method: 'put', class: "form", role: "form"  do %>
+      <div class="form-group">
+        <label for="inputClientid" class="control-label">API CLIENT ID</label>
+        <div class="">
+          <input type="text" class="form-control" id="inputClientid" placeholder="cliend id" name="client_id" autofocus="autofocus">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputEmail3" class="control-label">API ACCESS KEY</label>
+        <div class="">
+          <input type="text" class="form-control" id="inputEmail3" placeholder="access key" name="access_key">
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="inputPassword3" class="control-label">API SECRET KEY</label>
+        <div class="">
+          <input type="text" class="form-control" id="inputPassword3" placeholder="secret key" name="secret_key">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="">
+          <%= button_tag 'Update', type: 'submit', class: 'btn btn-primary', disable_with: 'Updating...' %>
+          <%= link_to 'Close', root_path, class: 'btn btn-default' %>
+        </div>
+      </div>
+    <% end %>
+  </section>
+</div>

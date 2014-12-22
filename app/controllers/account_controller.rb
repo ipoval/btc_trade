@@ -1,5 +1,3 @@
-require 'yaml/store'
-
 class AccountController < ApplicationController
   def index
     @account = OpenStruct.new client.get_balances
@@ -31,7 +29,7 @@ class AccountController < ApplicationController
   end
 
   def write_updating_secrets
-    store.transaction do |db|
+    yaml_store.transaction do |db|
       db[:LAKE_BTC_API_ACCESSKEY] = updating_access_key
       db[:LAKE_BTC_API_SECRETKEY] = updating_secret_key
     end

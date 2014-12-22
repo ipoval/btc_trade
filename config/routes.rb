@@ -17,14 +17,14 @@ Rails.application.routes.draw do
   resources :sell_orders, only: [:create]
 
   namespace :bitstamp do
-    resource :account, only: [:show]
+    resource :account, only: [:show, :edit, :update]
     resources :orders, only: [:index, :new, :destroy]
     resources :buy_orders, only: [:create]
     resources :sell_orders, only: [:create]
   end
 
   namespace :okcoin do
-    resource :account, only: [:show]
+    resource :account, only: [:show, :edit, :update]
     resources :orders, only: [:index, :new, :destroy]
     resources :buy_orders, only: [:create]
     resources :sell_orders, only: [:create]

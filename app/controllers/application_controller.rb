@@ -10,14 +10,20 @@ class ApplicationController < ActionController::Base
 
   def client
     @client ||= begin
-      credentials = store.transaction(true) do |db|
+      credentials = yaml_store.transaction(true) do |db|
         [db.fetch(:LAKE_BTC_API_ACCESSKEY, ''), db.fetch(:LAKE_BTC_API_SECRETKEY, '')]
       end
       Lakebtc.new(*credentials)
     end
   end
 
-  def store
-    @store ||= YAML::Store.new(Rails.root + 'config/lake_btc_secrets.yml')
+  def okcoin_client
+    @okcoin_client ||= begin
+      credentials = yaml_store.transaction(true) do |db|
+        [db.fetch(:OKCOIN_API_ACCESSKEY, ''), db.fetch(:OKCOIN_API_SECRETKEY, '')]
+      end
+      OkcoinProxy.new(api_key: credentials[0], secret_key: credentials[1])
+    end
   end
+  helper_method :okcoin_client
 end

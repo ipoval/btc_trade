@@ -5,7 +5,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><%= @okcoin.account_id %></td>
+        <td><%= okcoin_client.account_id %></td>
         <td id="usdBalance"><%= number_to_currency @account.cny, unit: 'CN¥' %></td>
         <td id="btkBalance"><%= @account.btc %></td>
       </tr>
