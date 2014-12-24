@@ -5,7 +5,7 @@
     </thead>
     <tbody>
       <tr>
-        <td><%= Rails.application.secrets.bitstamp['client_id'] %></td>
+        <td><%= Bitstamp.client_id %></td>
         <td id="usdBalance"><%= number_to_currency @account.usd_available %></td>
         <td id="btkBalance"><%= @account.btc_available %></td>
       </tr>

@@ -11,13 +11,12 @@ class AccountsController < ApplicationController
   end
 
   def update
-    begin
-      bitstamp_setup client_id: updating_client_id, key: updating_access_key, secret: updating_secret_key
-      Bitstamp.balance
-    rescue
-    else
-      write_updating_secrets
-    end
+    bitstamp_setup client_id: updating_client_id, key: updating_access_key, secret: updating_secret_key
+    Bitstamp.balance
+  rescue
+  else
+    write_updating_secrets
+  ensure
     redirect_to edit_bitstamp_account_path
   end
 
@@ -37,9 +36,9 @@ class AccountsController < ApplicationController
 
   def write_updating_secrets
     yaml_store.transaction do |db|
-      db[:BITSTAMP_BTC_API_ACCESSKEY] = updating_access_key
-      db[:BITSTAMP_BTC_API_SECRETKEY] = updating_secret_key
-      db[:BITSTAMP_BTC_API_CLIENT_ID] = updating_client_id
+      db[:BITSTAMP_API_ACCESSKEY] = updating_access_key
+      db[:BITSTAMP_API_SECRETKEY] = updating_secret_key
+      db[:BITSTAMP_API_CLIENT_ID] = updating_client_id
     end
   end
 
