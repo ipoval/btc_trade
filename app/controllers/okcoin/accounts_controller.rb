@@ -11,12 +11,11 @@ class AccountsController < ApplicationController
   end
 
   def update
-    begin
-      Okcoin.new(api_key: updating_access_key, secret_key: updating_secret_key).account.fetch('info')
-    rescue
-    else
-      write_updating_secrets
-    end
+    OkcoinProxy.new(api_key: updating_access_key, secret_key: updating_secret_key).account.fetch('info')
+  rescue
+  else
+    write_updating_secrets
+  ensure
     redirect_to edit_okcoin_account_path
   end
 
