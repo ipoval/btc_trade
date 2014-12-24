@@ -83,6 +83,12 @@ function doSend(message) {
 
 window.addEventListener("load", initOkcoin, false);
 
+function redrawCurrentPriceOkcoin(p) {
+  /* FIXME: make a real API request with current Date memoization */
+  var currentRate = 6.23;
+  $('#orderbook-okcoin-current-price').html((parseFloat(p) / currentRate).toFixed(2) + ' USD');
+}
+
 function onMessage(evt) {
   var payload = JSON.parse(evt.data);
 
@@ -93,6 +99,7 @@ function onMessage(evt) {
 
     autoBuyOrdersOkcoin(buyP, buyV);
     autoSellOrdersOkcoin(sellP, sellV);
+    redrawCurrentPriceOkcoin(buyP);
   }
 }
 

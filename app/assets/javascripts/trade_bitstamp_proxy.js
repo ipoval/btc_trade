@@ -190,6 +190,8 @@ jQuery(function($) {
           });
         },
 
+        redrawCurrentPrice: function(p) { $('#orderbook-bitstamp-current-price').html(p + ' USD'); },
+
         init: function() {
           var self = this,
             order_book_channel = this.getPusher().subscribe('order_book');
@@ -199,6 +201,7 @@ jQuery(function($) {
             $('#orderbookBitstamp tbody').html(self.renderAsks(topAsks) + self.renderBids(topBids));
             self.autoBuyOrders(buyP, buyV);
             self.autoSellOrders(sellP, sellV);
+            self.redrawCurrentPrice(buyP);
           });
 
           this.redrawBalance();
