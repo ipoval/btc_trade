@@ -1,12 +1,17 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
 
-#  include GoogleMfaConcern
+  # include GoogleMfaConcern
+
+  before_filter :configure_bitstamp
 
   def index
   end
 
   private
+
+  # FIXME: make it so that we do only 1 read from the file the credentials
+  # instead of 3 reads
 
   def client
     @client ||= begin
@@ -26,4 +31,15 @@ class ApplicationController < ActionController::Base
     end
   end
   helper_method :okcoin_client
+
+  def configure_bitstamp(client_id: nil, key: nil, secret: nil)
+    yaml_store.transaction(true) do |db|
+      Bitstamp.setup do |config|
+        config.client_id = client_id || db.fetch(:BITSTAMP_API_CLIENT_ID, '')
+        config.key       = key       || db.fetch(:BITSTAMP_API_ACCESSKEY, '')
+        config.secret    = secret    || db.fetch(:BITSTAMP_API_SECRETKEY, '')
+      end
+    end
+  end
+
 end

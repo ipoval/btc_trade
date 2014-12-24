@@ -11,7 +11,7 @@ class AccountsController < ApplicationController
   end
 
   def update
-    bitstamp_setup client_id: updating_client_id, key: updating_access_key, secret: updating_secret_key
+    configure_bitstamp(client_id: updating_client_id, key: updating_access_key, secret: updating_secret_key)
     Bitstamp.balance
   rescue
   else
@@ -41,7 +41,6 @@ class AccountsController < ApplicationController
       db[:BITSTAMP_API_CLIENT_ID] = updating_client_id
     end
   end
-
 end
 
 end
