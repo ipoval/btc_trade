@@ -30,8 +30,8 @@ class AccountController < ApplicationController
 
   def write_updating_secrets
     yaml_store.transaction do |db|
-      db[:LAKE_BTC_API_ACCESSKEY] = updating_access_key
-      db[:LAKE_BTC_API_SECRETKEY] = updating_secret_key
+      db['LAKE_BTC_API_ACCESSKEY'] = updating_access_key
+      db['LAKE_BTC_API_SECRETKEY'] = updating_secret_key
     end
   end
 end

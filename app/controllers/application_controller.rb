@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
 
   # include GoogleMfaConcern
 
+  before_filter :configure_coin_clients
   before_filter :configure_bitstamp
 
   def index
@@ -10,35 +11,32 @@ class ApplicationController < ActionController::Base
 
   private
 
-  # FIXME: make it so that we do only 1 read from the file the credentials
-  # instead of 3 reads
+  def configure_coin_clients
+    yaml_store.transaction(true) do |db|
+      @lake_btc_api_accesskey = db['LAKE_BTC_API_ACCESSKEY']
+      @lake_btc_api_secretkey = db['LAKE_BTC_API_SECRETKEY']
+      @okcoin_api_accesskey   = db['OKCOIN_API_ACCESSKEY']
+      @okcoin_api_secretkey   = db['OKCOIN_API_SECRETKEY']
+      @bitstamp_api_client_id = db['BITSTAMP_API_CLIENT_ID']
+      @bitstamp_api_accesskey = db['BITSTAMP_API_ACCESSKEY']
+      @bitstamp_api_secretkey = db['BITSTAMP_API_SECRETKEY']
+    end
+  end
 
   def client
-    @client ||= begin
-      credentials = yaml_store.transaction(true) do |db|
-        [db.fetch(:LAKE_BTC_API_ACCESSKEY, ''), db.fetch(:LAKE_BTC_API_SECRETKEY, '')]
-      end
-      Lakebtc.new(*credentials)
-    end
+    @client ||= Lakebtc.new(@lake_btc_api_accesskey, @lake_btc_api_secretkey)
   end
 
   def okcoin_client
-    @okcoin_client ||= begin
-      credentials = yaml_store.transaction(true) do |db|
-        [db.fetch(:OKCOIN_API_ACCESSKEY, ''), db.fetch(:OKCOIN_API_SECRETKEY, '')]
-      end
-      OkcoinProxy.new(api_key: credentials[0], secret_key: credentials[1])
-    end
+    @okcoin_client ||= OkcoinProxy.new(api_key: @okcoin_api_accesskey, secret_key: @okcoin_api_secretkey)
   end
   helper_method :okcoin_client
 
-  def configure_bitstamp(client_id: nil, key: nil, secret: nil)
-    yaml_store.transaction(true) do |db|
-      Bitstamp.setup do |config|
-        config.client_id = client_id || db.fetch(:BITSTAMP_API_CLIENT_ID, '')
-        config.key       = key       || db.fetch(:BITSTAMP_API_ACCESSKEY, '')
-        config.secret    = secret    || db.fetch(:BITSTAMP_API_SECRETKEY, '')
-      end
+  def configure_bitstamp(_client_id: nil, _key: nil, _secret: nil)
+    Bitstamp.setup do |config|
+      config.client_id = _client_id || @bitstamp_api_client_id
+      config.key       = _key       || @bitstamp_api_accesskey
+      config.secret    = _secret    || @bitstamp_api_secretkey
     end
   end
 

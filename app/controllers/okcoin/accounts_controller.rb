@@ -31,8 +31,8 @@ class AccountsController < ApplicationController
 
   def write_updating_secrets
     yaml_store.transaction do |db|
-      db[:OKCOIN_API_ACCESSKEY] = updating_access_key
-      db[:OKCOIN_API_SECRETKEY] = updating_secret_key
+      db['OKCOIN_API_ACCESSKEY'] = updating_access_key
+      db['OKCOIN_API_SECRETKEY'] = updating_secret_key
     end
   end
 
