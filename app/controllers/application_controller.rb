@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
 
-  # include GoogleMfaConcern
+  include GoogleMfaConcern
 
   before_filter :configure_coin_clients
   before_filter :configure_bitstamp
