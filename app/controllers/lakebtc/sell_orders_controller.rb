@@ -1,3 +1,5 @@
+module Lakebtc
+
 class SellOrdersController < ApplicationController
   def create
     result = client.sell_order(order_price, order_amount, 'USD')
@@ -17,4 +19,6 @@ class SellOrdersController < ApplicationController
   def order_amount
     Float(sell_order_params.fetch('amount'))
   end
+end
+
 end

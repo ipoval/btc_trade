@@ -1,3 +1,5 @@
+module Lakebtc
+
 class OrdersController < ApplicationController
   def index
     @orders = client.get_orders.reverse
@@ -22,4 +24,6 @@ class OrdersController < ApplicationController
   end
 
   helper_method :order_css_class, :order_id
+end
+
 end

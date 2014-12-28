@@ -154,8 +154,8 @@ jQuery(function($) {
     $('#orderbook-current-price').data({ price: askPrice, 'ask-volume': askVolume, 'bid-price': bidPrice, 'bid-volume': bidVolume });
     document.title = askPrice;
   }
-  function redrawBalance() { $('#sectionAccountBalance').load('/account'); }
-  function redrawOrdersList() { $('#sectionOrdersList').load('/orders'); }
+  function redrawBalance() { $('#sectionAccountBalance').load('/lakebtc/account'); }
+  function redrawOrdersList() { $('#sectionOrdersList').load('/lakebtc/orders'); }
   function renderBuyAutoOrders() {
     if ( ! window.BTCHelper.autoOrdersOn() ) { return; }
     var orderRow = [

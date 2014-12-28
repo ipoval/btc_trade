@@ -102,7 +102,7 @@
       <div class="collapse navbar-collapse" id="navbar">
         <ul class="nav navbar-nav">
           <li class="<%= current_page?('/') ? 'active' : '' %>"><%= link_to 'Trade', root_path %></li>
-          <li class="<%= current_page?('/account/edit') ? 'active' : '' %>"><%= link_to 'LakeBTC', edit_account_path %></li>
+          <li class="<%= current_page?(edit_lakebtc_account_path) ? 'active' : '' %>"><%= link_to 'LakeBTC', edit_lakebtc_account_path %></li>
           <li class="<%= current_page?(edit_bitstamp_account_path) ? 'active' : '' %>"><%= link_to 'Bitstamp', edit_bitstamp_account_path %></li>
           <li class="<%= current_page?(edit_okcoin_account_path) ? 'active' : '' %>"><%= link_to 'Okcoin', edit_okcoin_account_path %></li>
         </ul>

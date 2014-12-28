@@ -1,5 +1,7 @@
-class AccountController < ApplicationController
-  def index
+module Lakebtc
+
+class AccountsController < ApplicationController
+  def show
     @account = OpenStruct.new client.get_balances
     render __method__, layout: false
   end
@@ -10,7 +12,7 @@ class AccountController < ApplicationController
 
   def update
     begin
-      Lakebtc.new(updating_access_key, updating_secret_key).get_balances
+      LakebtcProxy.new(updating_access_key, updating_secret_key).get_balances
     rescue
     else
       write_updating_secrets
@@ -34,4 +36,6 @@ class AccountController < ApplicationController
       db['LAKE_BTC_API_SECRETKEY'] = updating_secret_key
     end
   end
+end
+
 end

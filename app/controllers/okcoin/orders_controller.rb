@@ -4,6 +4,8 @@ class OrdersController < ApplicationController
   # {"amount"=>0.01, "avg_price"=>0, "create_date"=>1418961233000, "deal_amount"=>0, "order_id"=>190646782, "orders_id"=>190646782, "price"=>1900.1, "status"=>0, "symbol"=>"btc_cny", "type"=>"sell"}
   def index
     @orders = OkcoinProxy.new.orders['orders']
+  ensure
+    @orders ||= []
     render __method__, layout: false
   end
 

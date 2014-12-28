@@ -1,6 +1,6 @@
 require 'net/http'
 
-class Lakebtc
+class LakebtcProxy
   URL     = "https://www.lakebtc.com/api_v1"
   TIMEOUT = 30
 

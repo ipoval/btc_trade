@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
   end
 
   def client
-    @client ||= Lakebtc.new(@lake_btc_api_accesskey, @lake_btc_api_secretkey)
+    @client ||= LakebtcProxy.new(@lake_btc_api_accesskey, @lake_btc_api_secretkey)
   end
 
   def okcoin_client

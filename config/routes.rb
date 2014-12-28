@@ -5,16 +5,16 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   root 'application#index'
 
-  # FIXME: move to resource - fix this asap
-  get '/account' => 'account#index'
-  get '/account/edit' => 'account#edit', as: 'edit_account'
-  put '/account/update' => 'account#update', as: 'update_account'
-
   get '/login' => 'sessions#new', as: 'login'
+
   resources :sessions, only: [:new, :create]
-  resources :orders, only: [:index, :new, :destroy]
-  resources :buy_orders, only: [:create]
-  resources :sell_orders, only: [:create]
+
+  namespace :lakebtc do
+    resource :account, only: [:show, :edit, :update]
+    resources :orders, only: [:index, :new, :destroy]
+    resources :buy_orders, only: [:create]
+    resources :sell_orders, only: [:create]
+  end
 
   namespace :bitstamp do
     resource :account, only: [:show, :edit, :update]
