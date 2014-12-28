@@ -12,7 +12,7 @@ class ApplicationController < ActionController::Base
   private
 
   def configure_coin_clients
-    yaml_store.transaction(true) do |db|
+    Rails.application.config.bitcoin_clients_credentials_store.transaction(true) do |db|
       @lake_btc_api_accesskey = db['LAKE_BTC_API_ACCESSKEY']
       @lake_btc_api_secretkey = db['LAKE_BTC_API_SECRETKEY']
       @okcoin_api_accesskey   = db['OKCOIN_API_ACCESSKEY']

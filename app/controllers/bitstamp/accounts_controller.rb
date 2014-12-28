@@ -35,7 +35,7 @@ class AccountsController < ApplicationController
   end
 
   def write_updating_secrets
-    yaml_store.transaction do |db|
+    Rails.application.config.bitcoin_clients_credentials_store.transaction do |db|
       db['BITSTAMP_API_ACCESSKEY'] = updating_access_key
       db['BITSTAMP_API_SECRETKEY'] = updating_secret_key
       db['BITSTAMP_API_CLIENT_ID'] = updating_client_id

@@ -1,9 +1,8 @@
 class OkcoinProxy
-  # FIXME: extract those values from here
-  def initialize(api_key: 'e931ae89-0b8f-48f3-ac21-1ed8de289c84', secret_key: '51DEB5CB61E3E8142CFCBB3106E5D10A')
+  def initialize(api_key: nil, secret_key: nil)
     @api_key    = api_key
     @secret_key = secret_key
-    @params = { 'api_key' => @api_key }
+    @params     = { 'api_key' => @api_key }
   end
 
   def account_id
