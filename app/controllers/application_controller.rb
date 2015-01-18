@@ -32,11 +32,11 @@ class ApplicationController < ActionController::Base
   end
   helper_method :okcoin_client
 
-  def configure_bitstamp(_client_id: nil, _key: nil, _secret: nil)
+  def configure_bitstamp(client_id: nil, key: nil, secret: nil)
     Bitstamp.setup do |config|
-      config.client_id = _client_id || @bitstamp_api_client_id
-      config.key       = _key       || @bitstamp_api_accesskey
-      config.secret    = _secret    || @bitstamp_api_secretkey
+      config.client_id = client_id || @bitstamp_api_client_id
+      config.key       = key       || @bitstamp_api_accesskey
+      config.secret    = secret    || @bitstamp_api_secretkey
     end
   end
 
