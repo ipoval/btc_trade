@@ -1,4 +1,4 @@
-ruby '2.1.5'
+ruby '2.2.0'
 source 'https://rubygems.org'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
@@ -34,7 +34,7 @@ gem 'unicorn'
 # gem 'capistrano-rails', group: :development
 
 # Use debugger
-gem 'debugger', group: [:development, :test]
+# gem 'debugger', group: [:development, :test]
 
 gem 'oj'
 gem 'oj_mimic_json'
